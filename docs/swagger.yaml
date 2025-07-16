@@ -1,0 +1,139 @@
+basePath: /
+host: localhost:8080 (default)
+info:
+  contact: {}
+  description: API для управления задачами загрузки файлов
+  title: Download Service API
+  version: "1.0"
+paths:
+  /addTaskItems:
+    post:
+      consumes:
+      - application/json
+      description: Добавляет список ссылок для загрузки в указанную задачу
+      parameters:
+      - description: Данные для добавления
+        in: body
+        name: data
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Обновленная задача" example={"id":"bcdfcfc5-f1ab-4118-a5a6-681f69df1698","status":"working","links":["https://example.com/file1.pdf","https://example.com/image.jpg"],"errors":[]}
+          schema:
+            type: object
+        "400":
+          description: Ошибка" example={"message":"error decoding JSON"}
+          schema:
+            type: object
+        "404":
+          description: Ошибка" example={"message":"task not found"}
+          schema:
+            type: object
+        "500":
+          description: Ошибка" example={"message":"Server is busy"}
+          schema:
+            type: object
+      summary: Добавить ссылки в задачу
+      tags:
+      - tasks
+  /createTask:
+    post:
+      consumes:
+      - application/json
+      description: Создает новую задачу для загрузки файлов
+      parameters:
+      - description: Данные запроса
+        in: body
+        name: data
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Успешный ответ" example={"user_id":"97557152-c723-44c8-bb92-241d37a81344","task_id":"bcdfcfc5-f1ab-4118-a5a6-681f69df1698"}
+          schema:
+            type: object
+        "400":
+          description: Ошибка" example={"message":"error decoding JSON"}
+          schema:
+            type: object
+        "404":
+          description: Ошибка" example={"message":"user not found"}
+          schema:
+            type: object
+      summary: Создать новую задачу
+      tags:
+      - tasks
+  /download/{file_id}:
+    get:
+      description: Позволяет скачать zip-архив с загруженными файлами по ID задачи
+      parameters:
+      - description: ID архива (формат UUID с расширением .zip)
+        in: path
+        name: file_id
+        required: true
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: Zip-архив с файлами
+          headers:
+            Content-Disposition:
+              description: attachment; filename=archive.zip
+              type: string
+            Content-Type:
+              description: application/zip
+              type: string
+          schema:
+            type: file
+        "400":
+          description: Неверный запрос" example={"message":"Invalid file type"}
+          schema:
+            type: object
+        "404":
+          description: Файл не найден" example={"message":"File not found"}
+          schema:
+            type: object
+      summary: Скачать архив с файлами
+      tags:
+      - files
+  /taskStatus:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает текущий статус задачи. Если задача завершена, возвращает
+        URL для скачивания.
+      parameters:
+      - description: Данные запроса
+        in: body
+        name: data
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Завершенная задача" example={"status":"completed","download_url":"http://localhost:8080/download/archive.zip"}
+          schema:
+            type: object
+        "400":
+          description: Ошибка" example={"message":"error decoding JSON"}
+          schema:
+            type: object
+        "404":
+          description: Ошибка" example={"message":"task not found"}
+          schema:
+            type: object
+      summary: Получить статус задачи
+      tags:
+      - tasks
+schemes:
+- http
+swagger: "2.0"

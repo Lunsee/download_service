@@ -1,0 +1,210 @@
+{
+    "schemes": [
+        "http"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "API для управления задачами загрузки файлов",
+        "title": "Download Service API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080 (default)",
+    "basePath": "/",
+    "paths": {
+        "/addTaskItems": {
+            "post": {
+                "description": "Добавляет список ссылок для загрузки в указанную задачу",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Добавить ссылки в задачу",
+                "parameters": [
+                    {
+                        "description": "Данные для добавления",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Обновленная задача\" example={\"id\":\"bcdfcfc5-f1ab-4118-a5a6-681f69df1698\",\"status\":\"working\",\"links\":[\"https://example.com/file1.pdf\",\"https://example.com/image.jpg\"],\"errors\":[]}",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка\" example={\"message\":\"error decoding JSON\"}",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "404": {
+                        "description": "Ошибка\" example={\"message\":\"task not found\"}",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка\" example={\"message\":\"Server is busy\"}",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/createTask": {
+            "post": {
+                "description": "Создает новую задачу для загрузки файлов",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Создать новую задачу",
+                "parameters": [
+                    {
+                        "description": "Данные запроса",
+                        "name": "data",
+                        "in": "body",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Успешный ответ\" example={\"user_id\":\"97557152-c723-44c8-bb92-241d37a81344\",\"task_id\":\"bcdfcfc5-f1ab-4118-a5a6-681f69df1698\"}",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка\" example={\"message\":\"error decoding JSON\"}",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "404": {
+                        "description": "Ошибка\" example={\"message\":\"user not found\"}",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/download/{file_id}": {
+            "get": {
+                "description": "Позволяет скачать zip-архив с загруженными файлами по ID задачи",
+                "produces": [
+                    "application/octet-stream"
+                ],
+                "tags": [
+                    "files"
+                ],
+                "summary": "Скачать архив с файлами",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID архива (формат UUID с расширением .zip)",
+                        "name": "file_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Zip-архив с файлами",
+                        "schema": {
+                            "type": "file"
+                        },
+                        "headers": {
+                            "Content-Disposition": {
+                                "type": "string",
+                                "description": "attachment; filename=archive.zip"
+                            },
+                            "Content-Type": {
+                                "type": "string",
+                                "description": "application/zip"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Неверный запрос\" example={\"message\":\"Invalid file type\"}",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "404": {
+                        "description": "Файл не найден\" example={\"message\":\"File not found\"}",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/taskStatus": {
+            "get": {
+                "description": "Возвращает текущий статус задачи. Если задача завершена, возвращает URL для скачивания.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Получить статус задачи",
+                "parameters": [
+                    {
+                        "description": "Данные запроса",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Завершенная задача\" example={\"status\":\"completed\",\"download_url\":\"http://localhost:8080/download/archive.zip\"}",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка\" example={\"message\":\"error decoding JSON\"}",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "404": {
+                        "description": "Ошибка\" example={\"message\":\"task not found\"}",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
