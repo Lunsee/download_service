@@ -108,7 +108,8 @@ go run cmd/main.go
 Content-Type: application/zip
 Content-Disposition: attachment; filename=archive.zip
 <br />
-Документация API:
+
+### Документация API
 Доступна по адресу:
 ```
 http://localhost:8080/swagger
