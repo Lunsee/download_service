@@ -45,7 +45,7 @@ go run cmd/main.go
 ```
 Доступные эндпоинты:
 
-- POST /createTask - создать новую задачу
+- POST /createTask - создать новую задачу <br />
 Тело запроса (опционально):
 ```
 {
@@ -62,12 +62,57 @@ go run cmd/main.go
 
 
 
-- POST /addTaskItems - добавить URL в задачу
+- POST /addTaskItems - добавить URL в задачу <br />
+Тело запроса (обязательно):
+```
+{
+  "user_id": "uuid-строка",
+  "task_id": "uuid-строка",
+  "links": [
+    "https://example.com/file1.pdf",
+    "https://example.com/image.jpg"
+  ]
+}
+```
+Пример ответа:
+```
+{
+  "id": "bcdfcfc5-f1ab-4118-a5a6-681f69df1698",
+  "status": "working",
+  "links": [...],
+  "errors": []
+}
+```
 
-- GET /taskStatus - проверить статус задачи
+- GET /taskStatus - проверить статус задачи <br />
+Тело запроса (обязательно):
+```
+{
+  "user_id": "97557152-c723-44c8-bb92-241d37a81344",
+  "task_id": "bcdfcfc5-f1ab-4118-a5a6-681f69df1698"
+}
+```
+Возможные ответы:
+1.Задача в процессе:
+```
+{"status": "working"}
+```
+2.Задача в процессе:
+```
+{
+  "status": "completed",
+  "download_url": "http://your-server/download/archive.zip"
+}
+```
 
-- GET /download/{file_id} - скачать архив
+- GET /download/{file_id} - скачать архив <br />
+Параметры: file_id - имя архива (формат: uuid.zip) <br />
+Ответ: <br />
+Content-Type: application/zip
+Content-Disposition: attachment; filename=archive.zip
 
 Документация API:
-
-Доступна по адресу /swagger/index.html
+Доступна по адресу:
+```
+http://localhost:8080/swagger
+```
