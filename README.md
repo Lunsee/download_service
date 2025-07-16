@@ -107,8 +107,6 @@ go run cmd/main.go
 Ответ: <br />
 Content-Type: application/zip
 Content-Disposition: attachment; filename=archive.zip
-<br />
-
 ### Документация API
 Доступна по адресу:
 ```
