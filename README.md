@@ -59,9 +59,6 @@ go run cmd/main.go
   "task_id": "bcdfcfc5-f1ab-4118-a5a6-681f69df1698"
 }
 ```
-
-
-
 - POST /addTaskItems - добавить URL в задачу <br />
 Тело запроса (обязательно):
 ```
@@ -104,13 +101,13 @@ go run cmd/main.go
   "download_url": "http://your-server/download/archive.zip"
 }
 ```
-
 - GET /download/{file_id} - скачать архив <br />
-Параметры: file_id - имя архива (формат: uuid.zip) <br />
+Параметры: <br />
+ file_id - имя архива (формат: uuid.zip) <br />
 Ответ: <br />
 Content-Type: application/zip
 Content-Disposition: attachment; filename=archive.zip
-
+<br />
 Документация API:
 Доступна по адресу:
 ```
